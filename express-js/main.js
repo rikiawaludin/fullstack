@@ -1,6 +1,9 @@
 const express = require("express");
 const mysql = require("mysql");
+const cors = require('cors');
 const app = express();
+
+app.use(cors());
 
 const database = mysql.createConnection({
   host: "localhost",
@@ -14,8 +17,9 @@ database.connect((err) => {
   console.log("Database connected");
 });
 
-//sebagai gerbang masuk utama API
-app.get("/", (req, res) => {
+//ambil semua data users
+app.get("/api/v1/users", (req, res) => {
+  console.log('get api users di request');
   database.query("SELECT * FROM users", (err, rows) => {
     if (err) throw err;
     res.json({

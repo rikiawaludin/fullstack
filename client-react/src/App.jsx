@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const endpoint = "http://localhost:3001/api/v1/users";
+  const [users, setUsers] = useState([]);
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(endpoint);
+      const data = await response.json();
+      console.log(data); // Debugging: Log the fetched data
+      setUsers(data.data || []); // Update state with the actual user data array
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Testing</h1>
+      {users.map((user) => {
+        return (
+          <div key={user.id}>
+            <p>{user.username}</p>
+          </div>
+        );
+      })}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
